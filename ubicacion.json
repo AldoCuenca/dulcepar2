@@ -1,6 +1,6 @@
 {
-  "activo": false,
-  "lugar": "Parque de la Madre",
-  "horario": "hoy de 4pm a 7pm",
-  "mapa": "https://maps.app.goo.gl/gLwTo334Qrm9j78t7"
+  "activo": true,
+  "lugar": "Parque María Auxiliadora",
+  "horario": "hoy de 2pm a 7pm",
+  "mapa": "https://maps.app.goo.gl/5ntR1QuDduAhdh3W9"
 }
