@@ -53,6 +53,15 @@
       "imagen": "",
       "badge": "Bajo pedido",
       "activo": true
+    },
+    {
+      "id": "c1784302154072",
+      "nombre": "rosa tejida",
+      "descripcion": "Rosa tejida a mano con hilo",
+      "precio": "$1.50",
+      "badge": "bajo pedido",
+      "imagen": "images/rosa-tejida-1784302151009.png",
+      "activo": true
     }
   ],
   "antojitos": [
