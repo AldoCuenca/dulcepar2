@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel Dulce Par — Ubicación de hoy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FCEEDA; --cream-card:#FFFAF1; --red:#DD3B61; --red-deep:#C22C50;
+    --pink:#F5AAC9; --pink-soft:#FBD9E7; --green:#74B87C; --brown:#4A2B2C; --brown-soft:#8B5E52;
+    --shadow:rgba(74,43,44,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--cream); color:var(--brown);
+    font-family:'Karla', sans-serif; min-height:100vh;
+    display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  h1,h2{font-family:'Fredoka'; font-weight:600;}
+  .card{
+    background:var(--cream-card); border-radius:22px; padding:36px;
+    max-width:480px; width:100%; box-shadow:0 16px 40px var(--shadow);
+  }
+  .lock-card{text-align:center;}
+  .lock-card .emoji{font-size:2.4rem; margin-bottom:10px;}
+  h1{font-size:1.4rem; margin-bottom:8px;}
+  .sub{color:var(--brown-soft); font-size:0.9rem; margin-bottom:22px;}
+  label{display:block; font-weight:700; font-size:0.88rem; margin:16px 0 6px;}
+  input, select{
+    width:100%; padding:12px 14px; border-radius:12px;
+    border:2px solid rgba(74,43,44,0.14); background:#fff;
+    font-family:'Karla'; font-size:0.95rem; color:var(--brown);
+  }
+  input:focus, select:focus{outline:none; border-color:var(--pink);}
+  .row{display:flex; align-items:center; gap:10px; margin-top:16px;}
+  .row input[type="checkbox"]{width:auto;}
+  .row label{margin:0; font-weight:600;}
+  button{
+    width:100%; margin-top:24px; padding:14px; border:none; border-radius:100px;
+    background:var(--red); color:#fff; font-weight:700; font-size:0.98rem;
+    cursor:pointer; font-family:'Karla';
+  }
+  button:hover{background:var(--red-deep);}
+  button.secondary{background:transparent; border:2px solid var(--brown); color:var(--brown); margin-top:10px;}
+  .preview{
+    margin-top:22px; padding:14px 18px; border-radius:14px;
+    background:var(--red); color:#fff; font-size:0.85rem; font-weight:600;
+    display:none;
+  }
+  .preview.show{display:block;}
+  .steps{
+    margin-top:22px; background:rgba(221,59,97,0.08); border-radius:14px;
+    padding:16px 18px; font-size:0.82rem; color:var(--brown-soft); line-height:1.6;
+  }
+  .steps b{color:var(--brown);}
+  .note{margin-top:14px; font-size:0.76rem; color:var(--brown-soft); text-align:center;}
+  #pass-error{color:var(--red-deep); font-size:0.85rem; margin-top:10px; display:none;}
+</style>
+</head>
+<body>
+
+<div class="card lock-card" id="lockCard">
+  <div class="emoji">🔒</div>
+  <h1>Panel de Dulce Par</h1>
+  <p class="sub">Solo para Aldo &amp; Karol. Ingresa la clave para continuar.</p>
+  <input type="password" id="passInput" placeholder="Clave">
+  <p id="pass-error">Clave incorrecta, intenta de nuevo.</p>
+  <button id="enterBtn">Entrar</button>
+  <p class="note">Esto no es seguridad real (es un archivo público) — solo evita que alguien que encuentre el link por casualidad lo toque. No compartas esta URL.</p>
+</div>
+
+<div class="card" id="panelCard" style="display:none;">
+  <h1>¿Dónde están hoy?</h1>
+  <p class="sub">Llena esto y descarga el archivo actualizado.</p>
+
+  <div class="row">
+    <input type="checkbox" id="activo" checked>
+    <label for="activo">Mostrar banner "hoy estamos aquí" en la página</label>
+  </div>
+
+  <label for="lugarSelect">Punto de venta</label>
+  <select id="lugarSelect">
+    <option value="Parque María Auxiliadora|https://maps.app.goo.gl/5ntR1QuDduAhdh3W9">Parque María Auxiliadora</option>
+    <option value="Parque Víctor J. Cuesta|https://maps.app.goo.gl/Std6p5sj4dmuPkoS8">Parque Víctor J. Cuesta</option>
+    <option value="Parque de la Madre|https://maps.app.goo.gl/gLwTo334Qrm9j78t7">Parque de la Madre</option>
+    <option value="Parque Miraflores|https://maps.app.goo.gl/DpRVqnZnDrYdKBLJ9">Parque Miraflores</option>
+    <option value="Parque El Paraíso|https://maps.app.goo.gl/8NTfuEpBt1JxL9Mf7">Parque El Paraíso</option>
+    <option value="alrededores de la U. Politécnica Salesiana|https://maps.app.goo.gl/uifVJ6GQD2m92ugHA">Alrededores U. Politécnica Salesiana</option>
+    <option value="alrededores de la U. de Cuenca, Campus Central|https://maps.app.goo.gl/o5vXcpiM43wJvE2W7">Alrededores U. de Cuenca — Campus Central</option>
+    <option value="otro">Otro lugar (escribir abajo)</option>
+  </select>
+
+  <div id="customWrap" style="display:none;">
+    <label for="lugarCustom">Nombre del lugar</label>
+    <input type="text" id="lugarCustom" placeholder="Ej: Feria de emprendedores, Parque Calderón">
+    <label for="mapaCustom">Link de Google Maps (opcional)</label>
+    <input type="text" id="mapaCustom" placeholder="https://maps.app.goo.gl/...">
+  </div>
+
+  <label for="horario">Horario / nota</label>
+  <input type="text" id="horario" placeholder="Ej: hoy de 4pm a 7pm" value="hoy de 4pm a 7pm">
+
+  <button id="genBtn">⬇️ Descargar ubicacion.json</button>
+  <button class="secondary" id="copyBtn" type="button">📋 Copiar texto (para GitHub)</button>
+  <button class="secondary" id="lockAgainBtn" type="button">Cerrar panel</button>
+
+  <div class="preview" id="preview"></div>
+  <textarea id="jsonOutput" readonly style="width:100%; margin-top:12px; min-height:110px; font-family:monospace; font-size:0.82rem; padding:12px; border-radius:12px; border:2px solid rgba(74,43,44,0.14); background:#fff; color:var(--brown); display:none;"></textarea>
+
+  <div class="steps">
+    <b>Opción A — si conectaste tu sitio a GitHub (recomendado):</b><br>
+    1. Toca "📋 Copiar texto" arriba.<br>
+    2. Ve a tu repositorio en GitHub → abre <b>ubicacion.json</b> → ícono de lápiz (editar).<br>
+    3. Borra todo y pega el texto copiado.<br>
+    4. Toca "Commit changes" — tu página se actualiza sola en menos de un minuto.<br><br>
+    <b>Opción B — si subes por arrastrar y soltar en Netlify:</b><br>
+    1. Descarga el archivo con el botón de arriba.<br>
+    2. Reemplaza el <b>ubicacion.json</b> dentro de tu carpeta del sitio.<br>
+    3. Vuelve a arrastrar toda la carpeta a Netlify.
+  </div>
+</div>
+
+<script>
+  const PASSWORD = "dulcepar2026";
+
+  const lockCard = document.getElementById('lockCard');
+  const panelCard = document.getElementById('panelCard');
+  const passInput = document.getElementById('passInput');
+  const passError = document.getElementById('pass-error');
+
+  function unlock(){
+    lockCard.style.display = 'none';
+    panelCard.style.display = 'block';
+  }
+  document.getElementById('enterBtn').addEventListener('click', () => {
+    if(passInput.value === PASSWORD) unlock();
+    else { passError.style.display = 'block'; }
+  });
+  passInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') document.getElementById('enterBtn').click(); });
+  document.getElementById('lockAgainBtn').addEventListener('click', () => {
+    panelCard.style.display = 'none';
+    lockCard.style.display = 'block';
+    passInput.value = '';
+    passError.style.display = 'none';
+  });
+
+  const lugarSelect = document.getElementById('lugarSelect');
+  const customWrap = document.getElementById('customWrap');
+  lugarSelect.addEventListener('change', () => {
+    customWrap.style.display = lugarSelect.value === 'otro' ? 'block' : 'none';
+  });
+
+  function buildData(){
+    let lugar, mapa;
+    if(lugarSelect.value === 'otro'){
+      lugar = document.getElementById('lugarCustom').value.trim() || 'Por confirmar';
+      mapa = document.getElementById('mapaCustom').value.trim();
+    } else {
+      const [l, m] = lugarSelect.value.split('|');
+      lugar = l; mapa = m;
+    }
+    return {
+      activo: document.getElementById('activo').checked,
+      lugar: lugar,
+      horario: document.getElementById('horario').value.trim(),
+      mapa: mapa || ''
+    };
+  }
+
+  function showPreview(data){
+    const preview = document.getElementById('preview');
+    preview.textContent = data.activo
+      ? `Vista previa: 📍 Hoy nos encuentras en ${data.lugar} · ${data.horario}`
+      : 'Vista previa: el banner estará OCULTO en la página.';
+    preview.classList.add('show');
+  }
+
+  document.getElementById('genBtn').addEventListener('click', () => {
+    const data = buildData();
+    showPreview(data);
+    const json = JSON.stringify(data, null, 2);
+
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ubicacion.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    const data = buildData();
+    showPreview(data);
+    const json = JSON.stringify(data, null, 2);
+    const output = document.getElementById('jsonOutput');
+    output.style.display = 'block';
+    output.value = json;
+    output.focus();
+    output.select();
+    try{
+      await navigator.clipboard.writeText(json);
+      const btn = document.getElementById('copyBtn');
+      const original = btn.textContent;
+      btn.textContent = '✅ Copiado — pégalo en GitHub';
+      setTimeout(() => { btn.textContent = original; }, 2500);
+    }catch(e){
+      // el texto ya quedó seleccionado en el cuadro para copiar manualmente
+    }
+  });
+</script>
+
+</body>
+</html>
