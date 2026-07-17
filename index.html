@@ -369,12 +369,17 @@
     position:relative;
     box-shadow:0 10px 26px var(--shadow);
     transition:transform .25s ease;
+    overflow:hidden;
   }
   .p-card:hover{transform:translateY(-6px) rotate(-0.4deg);}
   .p-card .notch{
     position:absolute; top:0; left:26px; width:34px; height:14px;
     background:var(--pink);
     border-radius:0 0 8px 8px;
+  }
+  .p-card .p-photo{
+    width:calc(100% + 48px); margin:-26px -24px 14px;
+    height:150px; object-fit:cover; display:block;
   }
   .p-card h3{font-size:1.12rem; margin:10px 0 8px;}
   .p-card p{color:var(--brown-soft); font-size:0.9rem; margin-bottom:16px; min-height:44px;}
@@ -403,11 +408,15 @@
     display:flex; flex-direction:column; gap:14px; margin-bottom:26px;
   }
   .size-row{
-    display:flex; align-items:center; justify-content:space-between;
+    display:flex; align-items:center; gap:12px;
     background:var(--cream-card);
     border:1px solid var(--card-border);
     padding:16px 20px; border-radius:14px;
   }
+  .size-row .size-photo{
+    width:38px; height:38px; border-radius:10px; object-fit:cover; flex-shrink:0;
+  }
+  .size-row .size-info{flex:1;}
   .size-row .name{font-weight:700;}
   .size-row .oz{font-weight:400; color:var(--brown-soft); font-size:0.85rem;}
   .size-row .price{font-family:'Fredoka'; color:var(--green-deep); font-size:1.15rem;}
@@ -889,43 +898,7 @@
     <h2>Cartitas y detalles emocionales</h2>
     <p>Dibujos bonitos, dedicatorias y rosas de papel para mamá, papá, hermanos, amigos, parejas — o para quien quieras conquistar.</p>
   </div>
-  <div class="product-grid">
-    <div class="p-card">
-      <div class="notch"></div>
-      <h3>Cartita ilustrada</h3>
-      <p>Con dibujo bonito y mensaje del catálogo, lista para regalar.</p>
-      <div class="price">$1.00</div>
-    </div>
-    <div class="p-card">
-      <div class="notch"></div>
-      <h3>Cartita personalizada</h3>
-      <p>Dedicatoria escrita a la medida de lo que quieras decir.</p>
-      <div class="price">$1.25 <small>– $1.50</small></div>
-    </div>
-    <div class="p-card">
-      <div class="notch"></div>
-      <h3>Rosa de origami sencilla</h3>
-      <p>Una rosa de papel doblada a mano, con su tarjeta.</p>
-      <div class="price">$1.50</div>
-    </div>
-    <div class="p-card">
-      <div class="notch"></div>
-      <h3>Rosa origami elaborada</h3>
-      <p>Rosa más detallada, acompañada de dedicatoria escrita.</p>
-      <div class="price">$2.00</div>
-    </div>
-    <div class="p-card">
-      <div class="notch"></div>
-      <h3>Mini ramo</h3>
-      <p>2 o 3 rosas de papel juntas, para un regalo con más presencia.</p>
-      <div class="price">$3.00 <small>– $4.00</small></div>
-    </div>
-    <div class="p-card">
-      <div class="notch"></div>
-      <h3>Rosa tejida a mano <span class="soon">Bajo pedido</span></h3>
-      <p>Tejida con hilo, para quien quiere un detalle que dure.</p>
-      <div class="price">$3.50 <small>– $5.00</small></div>
-    </div>
+  <div class="product-grid" id="cartitasGrid">
   </div>
 </section>
 
@@ -946,19 +919,7 @@
       <span class="eyebrow">Línea 2</span>
       <h2 style="font-size:2.1rem; margin-bottom:10px;">Antojitos</h2>
       <p style="color:var(--brown-soft); margin-bottom:26px;">Yogurt natural bien frío, con la mermelada que tú elijas. Se arma al momento, en un envase con tapa, para llevar a donde quieras.</p>
-      <div class="sizes">
-        <div class="size-row">
-          <div><span class="name">Pequeño</span> <span class="oz">6 oz</span></div>
-          <div class="price">$1.25</div>
-        </div>
-        <div class="size-row">
-          <div><span class="name">Normal</span> <span class="oz">9 oz</span></div>
-          <div class="price">$1.75</div>
-        </div>
-        <div class="size-row">
-          <div><span class="name">Grande</span> <span class="oz">12 oz</span></div>
-          <div class="price">$2.25</div>
-        </div>
+      <div class="sizes" id="antojitosSizes">
       </div>
       <div class="flavors">
         <span class="flavor-chip">🍓 Frutilla</span>
@@ -1219,7 +1180,11 @@
     <a href="#donde">Dónde encontrarnos</a>
   </div>
   <p>por Aldo &amp; Karol — Cuenca, Ecuador</p>
-  <p style="margin-top:10px; opacity:0.5;"><a href="admin.html" style="font-size:0.72rem;">⚙ panel</a></p>
+  <p style="margin-top:10px; opacity:0.5;">
+    <a href="admin.html" style="font-size:0.72rem;">⚙ panel ubicación</a>
+    &nbsp;·&nbsp;
+    <a href="panel-productos.html" style="font-size:0.72rem;">⚙ panel productos</a>
+  </p>
 </footer>
 
 <a class="float-whatsapp" href="https://wa.me/593998409170" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
@@ -1279,6 +1244,64 @@
       else root.setAttribute('data-theme', 'dark');
       updateLabel();
     });
+  })();
+
+  // ---- Catálogo dinámico (cartitas y antojitos) ----
+  (function(){
+    const FALLBACK = {
+      cartitas: [
+        { id:'c1', nombre:'Cartita ilustrada', descripcion:'Con dibujo bonito y mensaje del catálogo, lista para regalar.', precio:'$1.00', imagen:'', badge:'', activo:true },
+        { id:'c2', nombre:'Cartita personalizada', descripcion:'Dedicatoria escrita a la medida de lo que quieras decir.', precio:'$1.25 – $1.50', imagen:'', badge:'', activo:true },
+        { id:'c3', nombre:'Rosa de origami sencilla', descripcion:'Una rosa de papel doblada a mano, con su tarjeta.', precio:'$1.50', imagen:'', badge:'', activo:true },
+        { id:'c4', nombre:'Rosa origami elaborada', descripcion:'Rosa más detallada, acompañada de dedicatoria escrita.', precio:'$2.00', imagen:'', badge:'', activo:true },
+        { id:'c5', nombre:'Mini ramo', descripcion:'2 o 3 rosas de papel juntas, para un regalo con más presencia.', precio:'$3.00 – $4.00', imagen:'', badge:'', activo:true },
+        { id:'c6', nombre:'Rosa tejida a mano', descripcion:'Tejida con hilo, para quien quiere un detalle que dure.', precio:'$3.50 – $5.00', imagen:'', badge:'Bajo pedido', activo:true }
+      ],
+      antojitos: [
+        { id:'y1', nombre:'Pequeño', descripcion:'6 oz', precio:'$1.25', imagen:'', badge:'', activo:true },
+        { id:'y2', nombre:'Normal', descripcion:'9 oz', precio:'$1.75', imagen:'', badge:'', activo:true },
+        { id:'y3', nombre:'Grande', descripcion:'12 oz', precio:'$2.25', imagen:'', badge:'', activo:true }
+      ]
+    };
+
+    function cartitaHTML(p){
+      const photo = p.imagen ? `<img class="p-photo" src="${p.imagen}" alt="${p.nombre}">` : `<div class="notch"></div>`;
+      const badge = p.badge ? `<span class="soon">${p.badge}</span>` : '';
+      return `
+        <div class="p-card">
+          ${photo}
+          <h3>${p.nombre} ${badge}</h3>
+          <p>${p.descripcion}</p>
+          <div class="price">${p.precio}</div>
+        </div>`;
+    }
+
+    function antojitoHTML(p){
+      const photo = p.imagen ? `<img class="size-photo" src="${p.imagen}" alt="${p.nombre}">` : '';
+      return `
+        <div class="size-row">
+          ${photo}
+          <div class="size-info"><span class="name">${p.nombre}</span> <span class="oz">${p.descripcion}</span></div>
+          <div class="price">${p.precio}</div>
+        </div>`;
+    }
+
+    function render(data){
+      const cGrid = document.getElementById('cartitasGrid');
+      const aList = document.getElementById('antojitosSizes');
+      if(cGrid && data.cartitas){
+        cGrid.innerHTML = data.cartitas.filter(p => p.activo !== false).map(cartitaHTML).join('');
+      }
+      if(aList && data.antojitos){
+        aList.innerHTML = data.antojitos.filter(p => p.activo !== false).map(antojitoHTML).join('');
+      }
+    }
+
+    render(FALLBACK);
+    fetch('productos.json', { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if(data) render(data); })
+      .catch(() => { /* seguimos mostrando el catálogo de respaldo */ });
   })();
 
   // ---- Banner "hoy estamos en" ----

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel Dulce Par — Productos y fotos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FCEEDA; --cream-card:#FFFAF1; --red:#DD3B61; --red-deep:#C22C50;
+    --pink:#F5AAC9; --pink-soft:#FBD9E7; --green:#74B87C; --green-deep:#5B9C63;
+    --brown:#4A2B2C; --brown-soft:#8B5E52; --shadow:rgba(74,43,44,0.14); --border:rgba(74,43,44,0.12);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--cream); color:var(--brown);
+    font-family:'Karla', sans-serif; min-height:100vh;
+    padding:24px; line-height:1.5;
+  }
+  h1,h2,h3{font-family:'Fredoka'; font-weight:600;}
+  .wrap{max-width:760px; margin:0 auto;}
+  .card{
+    background:var(--cream-card); border-radius:22px; padding:32px;
+    box-shadow:0 16px 40px var(--shadow); margin-bottom:22px;
+  }
+  .lock-wrap{max-width:420px; margin:60px auto; text-align:center;}
+  .lock-wrap .emoji{font-size:2.4rem; margin-bottom:10px;}
+  h1{font-size:1.35rem; margin-bottom:8px;}
+  .sub{color:var(--brown-soft); font-size:0.88rem; margin-bottom:18px;}
+  label{display:block; font-weight:700; font-size:0.85rem; margin:14px 0 6px;}
+  input, select, textarea{
+    width:100%; padding:11px 13px; border-radius:12px;
+    border:2px solid var(--border); background:#fff;
+    font-family:'Karla'; font-size:0.92rem; color:var(--brown);
+  }
+  textarea{min-height:70px; resize:vertical;}
+  input:focus, select:focus, textarea:focus{outline:none; border-color:var(--pink);}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  button{
+    font-family:'Karla'; cursor:pointer; border:none; border-radius:100px;
+    font-weight:700; font-size:0.92rem; padding:12px 20px;
+  }
+  .btn-primary{background:var(--red); color:#fff; width:100%; margin-top:16px;}
+  .btn-primary:hover{background:var(--red-deep);}
+  .btn-primary:disabled{opacity:0.5; cursor:not-allowed;}
+  .btn-secondary{background:transparent; border:2px solid var(--brown); color:var(--brown);}
+  .btn-ghost{background:none; color:var(--red-deep); font-size:0.82rem; padding:6px 4px;}
+  .btn-danger{background:none; color:var(--red-deep); font-size:0.78rem; padding:4px;}
+  .note{font-size:0.76rem; color:var(--brown-soft); margin-top:12px;}
+  #passError{color:var(--red-deep); font-size:0.84rem; margin-top:8px; display:none;}
+  .steps{
+    background:rgba(221,59,97,0.07); border-radius:14px; padding:16px 18px;
+    font-size:0.82rem; color:var(--brown-soft); line-height:1.7; margin-top:16px;
+  }
+  .steps b{color:var(--brown);}
+  .status{
+    font-size:0.85rem; font-weight:600; margin-top:12px; padding:10px 14px;
+    border-radius:10px; display:none;
+  }
+  .status.show{display:block;}
+  .status.ok{background:rgba(116,184,124,0.18); color:var(--green-deep);}
+  .status.err{background:rgba(221,59,97,0.12); color:var(--red-deep);}
+  .status.loading{background:rgba(74,43,44,0.08); color:var(--brown-soft);}
+
+  .tabs{display:flex; gap:8px; margin-bottom:18px;}
+  .tab-btn{
+    flex:1; background:var(--cream-card); border:1px solid var(--border);
+    padding:10px; border-radius:100px; font-weight:700; font-size:0.85rem; color:var(--brown-soft);
+  }
+  .tab-btn.active{background:var(--red); color:#fff; border-color:var(--red);}
+
+  .prod-row{
+    display:flex; align-items:center; gap:12px;
+    background:#fff; border:1px solid var(--border); border-radius:14px;
+    padding:10px 14px; margin-bottom:10px;
+  }
+  .prod-row img{width:42px; height:42px; border-radius:10px; object-fit:cover; background:var(--pink-soft); flex-shrink:0;}
+  .prod-row .ph{width:42px; height:42px; border-radius:10px; background:var(--pink-soft); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.1rem;}
+  .prod-row .info{flex:1; min-width:0;}
+  .prod-row .info h4{font-size:0.9rem; font-weight:700;}
+  .prod-row .info span{font-size:0.78rem; color:var(--brown-soft);}
+  .prod-row .actions{display:flex; gap:6px; flex-shrink:0;}
+  .prod-row .actions button{padding:6px 10px; font-size:0.76rem;}
+  .prod-row.inactive{opacity:0.5;}
+
+  .hidden{display:none !important;}
+  .fileprev{width:100%; height:120px; object-fit:cover; border-radius:12px; margin-top:10px; display:none;}
+  .connect-status{font-size:0.82rem; font-weight:700; color:var(--green-deep); display:flex; align-items:center; gap:6px; margin-bottom:10px;}
+</style>
+</head>
+<body>
+
+<div class="lock-wrap" id="lockWrap">
+  <div class="emoji">🔒</div>
+  <h1>Panel de productos — Dulce Par</h1>
+  <p class="sub">Solo para Aldo &amp; Karol.</p>
+  <input type="password" id="passInput" placeholder="Clave">
+  <p id="passError">Clave incorrecta, intenta de nuevo.</p>
+  <button class="btn-primary" id="enterBtn">Entrar</button>
+</div>
+
+<div class="wrap hidden" id="mainWrap">
+
+  <div class="card" id="connectCard">
+    <h2>Conectar con tu sitio</h2>
+    <p class="sub">Esto conecta el panel directo a tu repositorio de GitHub para poder guardar cambios y fotos.</p>
+
+    <label for="ghRepo">Repositorio (usuario/nombre-del-repo)</label>
+    <input type="text" id="ghRepo" placeholder="AldoCuenca/dulce-par-web">
+
+    <label for="ghBranch">Rama</label>
+    <input type="text" id="ghBranch" value="main">
+
+    <label for="ghToken">Token de acceso de GitHub</label>
+    <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+
+    <button class="btn-primary" id="connectBtn">Conectar</button>
+    <div class="status" id="connectStatus"></div>
+
+    <div class="steps">
+      <b>¿Cómo consigo el token? (solo la primera vez)</b><br>
+      1. Entra a GitHub → toca tu foto de perfil (arriba a la derecha) → <b>Settings</b>.<br>
+      2. Baja hasta <b>Developer settings</b> (al final del menú izquierdo).<br>
+      3. <b>Personal access tokens → Fine-grained tokens → Generate new token</b>.<br>
+      4. Ponle un nombre, en "Repository access" elige <b>Only select repositories</b> y selecciona <b>dulce-par-web</b>.<br>
+      5. En "Permissions" busca <b>Contents</b> y ponlo en <b>Read and write</b>.<br>
+      6. Genera el token y cópialo — solo se muestra una vez, guárdalo en un lugar seguro.<br><br>
+      🔒 Este token es como una contraseña de tu repositorio: no lo compartas. El panel lo usa solo para hablar directo con GitHub desde tu navegador, no pasa por ningún otro servidor.
+    </div>
+  </div>
+
+  <div class="card hidden" id="panelCard">
+    <div class="connect-status">🟢 Conectado a <span id="connectedRepoLabel"></span></div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-cat="cartitas">💌 Cartitas</button>
+      <button class="tab-btn" data-cat="antojitos">🍓 Antojitos</button>
+    </div>
+
+    <div id="prodListWrap"></div>
+
+    <button class="btn-secondary" id="addProdBtn" style="width:100%; margin-top:14px;">+ Agregar producto</button>
+  </div>
+
+  <div class="card hidden" id="formCard">
+    <h2 id="formTitle">Nuevo producto</h2>
+    <input type="hidden" id="editId">
+    <input type="hidden" id="editCategoria">
+
+    <label for="fNombre">Nombre</label>
+    <input type="text" id="fNombre" placeholder="Ej: Rosa de origami sencilla">
+
+    <label for="fDescripcion">Descripción corta</label>
+    <textarea id="fDescripcion" placeholder="Lo que se ve debajo del nombre"></textarea>
+
+    <div class="row2">
+      <div>
+        <label for="fPrecio">Precio</label>
+        <input type="text" id="fPrecio" placeholder="$1.50 o $1.50 – $2.00">
+      </div>
+      <div>
+        <label for="fBadge">Etiqueta <span style="font-weight:400;">(opcional)</span></label>
+        <input type="text" id="fBadge" placeholder="Ej: Bajo pedido">
+      </div>
+    </div>
+
+    <label for="fImagen">Foto del producto <span style="font-weight:400;">(opcional)</span></label>
+    <input type="file" id="fImagen" accept="image/*">
+    <img id="fPreview" class="fileprev">
+
+    <label style="display:flex; align-items:center; gap:8px; margin-top:16px;">
+      <input type="checkbox" id="fActivo" style="width:auto;" checked>
+      <span style="font-weight:700; font-size:0.85rem;">Mostrar este producto en la página</span>
+    </label>
+
+    <button class="btn-primary" id="saveProdBtn">💾 Guardar y publicar</button>
+    <button class="btn-ghost" id="cancelFormBtn" style="width:100%; text-align:center; margin-top:6px;">Cancelar</button>
+    <div class="status" id="saveStatus"></div>
+  </div>
+
+</div>
+
+<script>
+  const PASSWORD = "dulcepar2026";
+
+  document.getElementById('enterBtn').addEventListener('click', () => {
+    if(document.getElementById('passInput').value === PASSWORD){
+      document.getElementById('lockWrap').classList.add('hidden');
+      document.getElementById('mainWrap').classList.remove('hidden');
+    } else {
+      document.getElementById('passError').style.display = 'block';
+    }
+  });
+  document.getElementById('passInput').addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') document.getElementById('enterBtn').click();
+  });
+
+  // ---------------- Estado ----------------
+  let gh = { owner: '', repo: '', branch: 'main', token: '' };
+  let productos = { cartitas: [], antojitos: [] };
+  let productosSha = null;
+  let activeCat = 'cartitas';
+
+  function b64EncodeUnicode(str){
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (m, p1) => String.fromCharCode('0x' + p1)));
+  }
+
+  function ghHeaders(){
+    return {
+      'Authorization': 'Bearer ' + gh.token,
+      'Accept': 'application/vnd.github+json'
+    };
+  }
+
+  function setStatus(el, type, text){
+    el.className = 'status show ' + type;
+    el.textContent = text;
+  }
+
+  // ---------------- Conectar ----------------
+  document.getElementById('connectBtn').addEventListener('click', async () => {
+    const repoInput = document.getElementById('ghRepo').value.trim();
+    const branch = document.getElementById('ghBranch').value.trim() || 'main';
+    const token = document.getElementById('ghToken').value.trim();
+    const statusEl = document.getElementById('connectStatus');
+
+    if(!repoInput.includes('/') || !token){
+      setStatus(statusEl, 'err', 'Revisa el repositorio (usuario/repo) y el token.');
+      return;
+    }
+    const [owner, repo] = repoInput.split('/');
+    gh = { owner, repo, branch, token };
+    setStatus(statusEl, 'loading', 'Conectando con GitHub...');
+
+    try{
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/productos.json?ref=${branch}`, { headers: ghHeaders() });
+      if(!res.ok) throw new Error('No se pudo leer productos.json (revisa el token y el nombre del repositorio).');
+      const json = await res.json();
+      productosSha = json.sha;
+      const decoded = decodeURIComponent(escape(atob(json.content.replace(/\n/g, ''))));
+      productos = JSON.parse(decoded);
+
+      setStatus(statusEl, 'ok', '¡Conectado! Ya puedes editar tus productos.');
+      document.getElementById('connectedRepoLabel').textContent = `${owner}/${repo}`;
+      document.getElementById('panelCard').classList.remove('hidden');
+      renderList();
+    }catch(err){
+      setStatus(statusEl, 'err', err.message || 'Ocurrió un error al conectar.');
+    }
+  });
+
+  // ---------------- Tabs ----------------
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCat = btn.dataset.cat;
+      renderList();
+    });
+  });
+
+  // ---------------- Lista de productos ----------------
+  function renderList(){
+    const wrap = document.getElementById('prodListWrap');
+    const items = productos[activeCat] || [];
+    if(items.length === 0){
+      wrap.innerHTML = '<p class="sub">Todavía no hay productos aquí.</p>';
+      return;
+    }
+    wrap.innerHTML = items.map((p) => `
+      <div class="prod-row ${p.activo === false ? 'inactive' : ''}">
+        ${p.imagen ? `<img src="${p.imagen.startsWith('http') ? p.imagen : 'https://raw.githubusercontent.com/' + gh.owner + '/' + gh.repo + '/' + gh.branch + '/' + p.imagen}" alt="">` : `<div class="ph">🍓</div>`}
+        <div class="info">
+          <h4>${p.nombre}</h4>
+          <span>${p.precio}${p.activo === false ? ' · oculto' : ''}</span>
+        </div>
+        <div class="actions">
+          <button class="btn-secondary" data-edit="${p.id}">Editar</button>
+          <button class="btn-danger" data-del="${p.id}">Eliminar</button>
+        </div>
+      </div>
+    `).join('');
+
+    wrap.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () => openForm(b.dataset.edit)));
+    wrap.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => deleteProduct(b.dataset.del)));
+  }
+
+  // ---------------- Formulario ----------------
+  const formCard = document.getElementById('formCard');
+  let pendingFile = null;
+
+  document.getElementById('addProdBtn').addEventListener('click', () => openForm(null));
+  document.getElementById('cancelFormBtn').addEventListener('click', () => {
+    formCard.classList.add('hidden');
+    document.getElementById('panelCard').classList.remove('hidden');
+  });
+
+  function openForm(id){
+    pendingFile = null;
+    document.getElementById('fPreview').style.display = 'none';
+    document.getElementById('fImagen').value = '';
+    document.getElementById('saveStatus').className = 'status';
+
+    const item = id ? productos[activeCat].find(p => p.id === id) : null;
+    document.getElementById('formTitle').textContent = item ? 'Editar producto' : 'Nuevo producto';
+    document.getElementById('editId').value = item ? item.id : '';
+    document.getElementById('editCategoria').value = activeCat;
+    document.getElementById('fNombre').value = item ? item.nombre : '';
+    document.getElementById('fDescripcion').value = item ? item.descripcion : '';
+    document.getElementById('fPrecio').value = item ? item.precio : '';
+    document.getElementById('fBadge').value = item ? (item.badge || '') : '';
+    document.getElementById('fActivo').checked = item ? (item.activo !== false) : true;
+
+    document.getElementById('panelCard').classList.add('hidden');
+    formCard.classList.remove('hidden');
+  }
+
+  document.getElementById('fImagen').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    pendingFile = file;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const prev = document.getElementById('fPreview');
+      prev.src = ev.target.result;
+      prev.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  function deleteProduct(id){
+    if(!confirm('¿Eliminar este producto de la página?')) return;
+    productos[activeCat] = productos[activeCat].filter(p => p.id !== id);
+    publishProductos('Eliminar producto ' + id).then(() => renderList());
+  }
+
+  document.getElementById('saveProdBtn').addEventListener('click', async () => {
+    const statusEl = document.getElementById('saveStatus');
+    const categoria = document.getElementById('editCategoria').value;
+    let id = document.getElementById('editId').value;
+    const nombre = document.getElementById('fNombre').value.trim();
+    const descripcion = document.getElementById('fDescripcion').value.trim();
+    const precio = document.getElementById('fPrecio').value.trim();
+    const badge = document.getElementById('fBadge').value.trim();
+    const activo = document.getElementById('fActivo').checked;
+
+    if(!nombre || !precio){
+      setStatus(statusEl, 'err', 'Ponle al menos nombre y precio.');
+      return;
+    }
+
+    document.getElementById('saveProdBtn').disabled = true;
+    let imagenPath = null;
+    const existing = id ? productos[categoria].find(p => p.id === id) : null;
+    if(existing) imagenPath = existing.imagen || '';
+
+    try{
+      if(pendingFile){
+        setStatus(statusEl, 'loading', 'Subiendo foto...');
+        imagenPath = await uploadImage(pendingFile);
+      }
+
+      if(!id){
+        id = categoria[0] + Date.now();
+        productos[categoria].push({ id, nombre, descripcion, precio, badge, imagen: imagenPath || '', activo });
+      } else {
+        Object.assign(existing, { nombre, descripcion, precio, badge, imagen: imagenPath || '', activo });
+      }
+
+      setStatus(statusEl, 'loading', 'Guardando en tu página...');
+      await publishProductos((id ? 'Editar' : 'Agregar') + ' producto ' + nombre);
+
+      setStatus(statusEl, 'ok', '¡Listo! Tu página se actualiza en menos de un minuto.');
+      renderList();
+      setTimeout(() => {
+        formCard.classList.add('hidden');
+        document.getElementById('panelCard').classList.remove('hidden');
+      }, 1200);
+    }catch(err){
+      setStatus(statusEl, 'err', err.message || 'Algo falló al guardar.');
+    }finally{
+      document.getElementById('saveProdBtn').disabled = false;
+    }
+  });
+
+  async function uploadImage(file){
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    const slug = (document.getElementById('fNombre').value || 'producto')
+      .toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const path = `images/${slug}-${Date.now()}.${ext}`;
+
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    const res = await fetch(`https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: ghHeaders(),
+      body: JSON.stringify({
+        message: 'Subir foto de producto: ' + path,
+        content: base64,
+        branch: gh.branch
+      })
+    });
+    if(!res.ok){
+      const errBody = await res.json().catch(() => ({}));
+      throw new Error('No se pudo subir la foto: ' + (errBody.message || res.status));
+    }
+    return path;
+  }
+
+  async function publishProductos(message){
+    const content = b64EncodeUnicode(JSON.stringify(productos, null, 2));
+    const res = await fetch(`https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/productos.json`, {
+      method: 'PUT',
+      headers: ghHeaders(),
+      body: JSON.stringify({
+        message: message || 'Actualizar productos',
+        content,
+        sha: productosSha,
+        branch: gh.branch
+      })
+    });
+    if(!res.ok){
+      const errBody = await res.json().catch(() => ({}));
+      throw new Error('No se pudo guardar productos.json: ' + (errBody.message || res.status));
+    }
+    const data = await res.json();
+    productosSha = data.content.sha;
+  }
+</script>
+
+</body>
+</html>

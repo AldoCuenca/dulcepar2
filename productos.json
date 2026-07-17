@@ -1,0 +1,87 @@
+{
+  "cartitas": [
+    {
+      "id": "c1",
+      "nombre": "Cartita ilustrada",
+      "descripcion": "Con dibujo bonito y mensaje del catálogo, lista para regalar.",
+      "precio": "$1.00",
+      "imagen": "",
+      "badge": "",
+      "activo": true
+    },
+    {
+      "id": "c2",
+      "nombre": "Cartita personalizada",
+      "descripcion": "Dedicatoria escrita a la medida de lo que quieras decir.",
+      "precio": "$1.25 – $1.50",
+      "imagen": "",
+      "badge": "",
+      "activo": true
+    },
+    {
+      "id": "c3",
+      "nombre": "Rosa de origami sencilla",
+      "descripcion": "Una rosa de papel doblada a mano, con su tarjeta.",
+      "precio": "$1.50",
+      "imagen": "",
+      "badge": "",
+      "activo": true
+    },
+    {
+      "id": "c4",
+      "nombre": "Rosa origami elaborada",
+      "descripcion": "Rosa más detallada, acompañada de dedicatoria escrita.",
+      "precio": "$2.00",
+      "imagen": "",
+      "badge": "",
+      "activo": true
+    },
+    {
+      "id": "c5",
+      "nombre": "Mini ramo",
+      "descripcion": "2 o 3 rosas de papel juntas, para un regalo con más presencia.",
+      "precio": "$3.00 – $4.00",
+      "imagen": "",
+      "badge": "",
+      "activo": true
+    },
+    {
+      "id": "c6",
+      "nombre": "Rosa tejida a mano",
+      "descripcion": "Tejida con hilo, para quien quiere un detalle que dure.",
+      "precio": "$3.50 – $5.00",
+      "imagen": "",
+      "badge": "Bajo pedido",
+      "activo": true
+    }
+  ],
+  "antojitos": [
+    {
+      "id": "y1",
+      "nombre": "Pequeño",
+      "descripcion": "6 oz",
+      "precio": "$1.25",
+      "imagen": "",
+      "badge": "",
+      "activo": true
+    },
+    {
+      "id": "y2",
+      "nombre": "Normal",
+      "descripcion": "9 oz",
+      "precio": "$1.75",
+      "imagen": "",
+      "badge": "",
+      "activo": true
+    },
+    {
+      "id": "y3",
+      "nombre": "Grande",
+      "descripcion": "12 oz",
+      "precio": "$2.25",
+      "imagen": "",
+      "badge": "",
+      "activo": true
+    }
+  ]
+}
