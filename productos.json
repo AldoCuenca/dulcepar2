@@ -53,6 +53,15 @@
       "imagen": "",
       "badge": "Bajo pedido",
       "activo": true
+    },
+    {
+      "id": "c1784296637122",
+      "nombre": "te amu",
+      "descripcion": "feliz dia",
+      "precio": "1000",
+      "badge": "bajo pedido",
+      "imagen": "images/te-amu-1784296632837.png",
+      "activo": true
     }
   ],
   "antojitos": [
