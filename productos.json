@@ -82,15 +82,6 @@
       "imagen": "",
       "badge": "",
       "activo": true
-    },
-    {
-      "id": "a1784296441906",
-      "nombre": "asd",
-      "descripcion": "holis",
-      "precio": "5$",
-      "badge": "bajo pedido",
-      "imagen": "images/asd-1784296439584.png",
-      "activo": true
     }
   ]
 }
